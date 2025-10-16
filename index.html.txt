@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adish Suryawanshi | DevOps Enthusiast</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 { font-size: 2.5rem; margin-top: 50px; }
+    h2 { color: #f0db4f; }
+    .section { margin: 40px 0; }
+    .skills span {
+      background-color: rgba(255,255,255,0.2);
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin: 5px;
+      display: inline-block;
+    }
+    footer {
+      background-color: rgba(0,0,0,0.3);
+      padding: 20px;
+      margin-top: 50px;
+    }
+    a {
+      color: #f0db4f;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>👋 Hi, I'm <span style="color:#f0db4f;">Adish Suryawanshi</span></h1>
+  <h2>DevOps Enthusiast</h2>
+
+  <div class="section">
+    <h3>🎓 Education</h3>
+    <p>MCA in Cloud Technology</p>
+  </div>
+
+  <div class="section">
+    <h3>🛠️ Technologies</h3>
+    <div class="skills">
+      <span>Java</span>
+      <span>AWS</span>
+      <span>Python</span>
+      <span>Jenkins</span>
+      <span>CI/CD Pipeline</span>
+      <span>Linux</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>📜 Certifications</h3>
+    <p>AWS Cloud Practitioner | Java | Python</p>
+  </div>
+
+  <div class="section">
+    <h3>📞 Contact Me</h3>
+    <p>Email: <a href="mailto:adishsuryawanshi200@gmail.com">adishsuryawanshi200@gmail.com</a></p>
+    <p>Phone: 8956204984</p>
+  </div>
+
+  <footer>
+    <p>© 2025 Adish Suryawanshi | Built with ❤️ & DevOps Tools</p>
+  </footer>
+</body>
+</html>
