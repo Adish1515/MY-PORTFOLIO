@@ -1,76 +1,46 @@
 pipeline {
-    agent any
+  agent any
 
-    environment {
-        REPO_DIR = 'MY-PORTFOLIO'
-        REPO_URL = 'git@github.com:Adish1515/MY-PORTFOLIO.git'
-        EC2_USER = 'ubuntu'
-        EC2_HOST = '13.203.221.219'
-    }
+  environment {
+    S3_BUCKET = "arn:aws:s3:::adish-portfolio-site"
+  }
 
-    triggers {
-        githubPush()
-    }
-
-    stages {
-        stage('Deploy on EC2') {
-            steps {
-                echo '🚀 Starting deployment on EC2 instance...'
-
-                sshagent(credentials: ['ec2-portfolio-key']) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
-                            set -e
-
-                            echo "---- [1/9] Cleaning old Git data ----"
-                            sudo rm -rf ~/.git ~/.config/git ~/.cache/git
-                            sudo rm -rf ${REPO_DIR}
-
-                            echo "---- [2/9] Installing dependencies ----"
-                            sudo apt-get update -y >/dev/null 2>&1 || true
-                            sudo apt-get install -y curl git >/dev/null 2>&1 || true
-
-                            echo "---- [3/9] Installing Node.js & npm ----"
-                            if ! command -v npm >/dev/null 2>&1; then
-                                curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - >/dev/null 2>&1
-                                sudo apt-get install -y nodejs >/dev/null 2>&1
-                            fi
-                            node -v
-                            npm -v
-
-                            echo "---- [4/9] Cloning repository ----"
-                            git clone ${REPO_URL}
-
-                            echo "---- [5/9] Installing project dependencies ----"
-                            cd ${REPO_DIR}
-                            npm install --legacy-peer-deps
-
-                            echo "---- [6/9] Building project ----"
-                            npm run build
-
-                            echo "---- [7/9] Deploying build to Nginx ----"
-                            sudo rm -rf /var/www/html/*
-                            sudo cp -r build/* /var/www/html/
-
-                            echo "---- [8/9] Restarting Nginx ----"
-                            sudo systemctl restart nginx
-
-                            echo "✅ [9/9] Deployment completed successfully!"
-                        '
-                    """
-                }
-            }
+  stages {
+    stage('Checkout') {
+      steps {
+        sshagent(['gitkey']) {
+          git url: 'git@github.com:<yourusername>/<yourrepo>.git', branch: 'main'
         }
+      }
     }
 
-    post {
-        success {
-            echo "🎉 Deployment successful! Application is live on http://${EC2_HOST}/"
-        }
-        failure {
-            echo "❌ Deployment failed! Check EC2 logs for details."
-        }
+    stage('Build') {
+      steps {
+        // run build if needed
+        sh 'ls -la'
+      }
     }
+
+    stage('Sync to S3') {
+      steps {
+        withCredentials([
+          string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+          string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
+        ]) {
+          sh '''
+            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            aws s3 sync . s3://${S3_BUCKET} --delete --exclude ".git/*" --acl public-read
+          '''
+        }
+      }
+    }
+  }
+
+  post {
+    success { echo "S3 sync done" }
+    failure { echo "S3 sync failed" }
+  }
 }
 
 
