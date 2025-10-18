@@ -5,7 +5,7 @@ pipeline {
         REPO_DIR = 'portfolio-anuj-1'
         REPO_URL = 'https://github.com/vanuj447/portfolio-anuj-1.git'
         EC2_USER = 'ubuntu'
-        EC2_HOST = '3.84.118.150'
+        EC2_HOST = '13.203.221.219'
     }
 
     triggers {
@@ -72,3 +72,4 @@ pipeline {
         }
     }
 }
+
