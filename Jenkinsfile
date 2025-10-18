@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        REPO_DIR = 'portfolio-anuj-1'
-        REPO_URL = 'https://github.com/vanuj447/portfolio-anuj-1.git'
+        REPO_DIR = 'MY-PORTFOLIO'
+        REPO_URL = 'git@github.com:Adish1515/MY-PORTFOLIO.git'
         EC2_USER = 'ubuntu'
         EC2_HOST = '13.203.221.219'
     }
@@ -72,4 +72,5 @@ pipeline {
         }
     }
 }
+
 
