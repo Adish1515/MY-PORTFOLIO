@@ -9,7 +9,7 @@ pipeline {
     stage('Checkout') {
       steps {
         sshagent(['gitkey']) {
-          git url: 'git@github.com:<yourusername>/<yourrepo>.git', branch: 'main'
+          git url: 'git@github.com:Adish1515/MY-PORTFOLIO.git', branch: 'main'
         }
       }
     }
@@ -24,12 +24,12 @@ pipeline {
     stage('Sync to S3') {
       steps {
         withCredentials([
-          string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
-          string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
+          string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'adish-key.pem'),
+          string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'adish-key.pem')
         ]) {
           sh '''
-            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            export AWS_ACCESS_KEY_ID=${adish-key.pem}
+            export AWS_SECRET_ACCESS_KEY=${adish-key.pem}
             aws s3 sync . s3://${S3_BUCKET} --delete --exclude ".git/*" --acl public-read
           '''
         }
@@ -42,5 +42,6 @@ pipeline {
     failure { echo "S3 sync failed" }
   }
 }
+
 
 
